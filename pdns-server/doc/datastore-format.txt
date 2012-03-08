@@ -1,0 +1,97 @@
+This is a description of the various data-structure used
+in the Passive DNS toolkit.
+
+= Redis Database number =
+
+ - (0) default passive dns
+ - (6) ranking of hostname
+
+= format for redis db 0 =
+
+KEY, VALUE
+
+s:<tuple>   <epoch timestamp>
+l:<tuple>   <epoch timestamp>
+o:<tuple>   <integer value>
+
+KEY, {SET}
+
+r:<record>:<rr-type-value>  {<answer>}
+v:<answer> {<record>}
+
+# "SET" "l:www.l.google.com:72.14.204.103" "1298819557"
+#1298823157.764353 "INCR" "o:www.l.google.com:72.14.204.103"
+#1298823157.765310 "SADD" "r:www.l.google.com:1" "72.14.204.104"
+#1298823157.765439 "SADD" "v:72.14.204.104" "www.l.google.com"
+#1298823157.765567 "EXISTS" "s:www.l.google.com:72.14.204.104"
+#1298823157.765696 "SET" "l:www.l.google.com:72.14.204.104" "1298819557"
+#1298823157.765823 "INCR" "o:www.l.google.com:72.14.204.104"
+#1298823157.766776 "SADD" "r:www.l.google.com:1" "72.14.204.147"
+#1298823157.766901 "SADD" "v:72.14.204.147" "www.l.google.com"
+#1298823157.767086 "EXISTS" "s:www.l.google.com:72.14.204.147"
+#1298823157.767207 "SET" "l:www.l.google.com:72.14.204.147" "1298819557"
+#1298823157.767333 "INCR" "o:www.l.google.com:72.14.204.147"
+
+
+== sample db 0 ==
+
+Here is the classical update process for a feeder:
+
+Set or update the last-seen.
+
+#1298823157.764221 "SET" "l:www.l.google.com:72.14.204.103" "1298819557"
+
+Update the occurence of the answer seen.
+
+#1298823157.764353 "INCR" "o:www.l.google.com:72.14.204.103"
+
+Add to a set "record:rr-type" the seen answer.
+
+#1298823157.765310 "SADD" "r:www.l.google.com:1" "72.14.204.104"
+
+Add the reverse for fast lookup.
+
+#1298823157.765439 "SADD" "v:72.14.204.104" "www.l.google.com"
+
+If there is no existing first-seen for the tuple,
+
+#1298823157.765567 "EXISTS" "s:www.l.google.com:72.14.204.104"
+
+A first-seen is set:
+
+#1298823157.765696 "SET" "l:www.l.google.com:72.14.204.104" "1298819557"
+
+and so on...
+
+#1298823157.765823 "INCR" "o:www.l.google.com:72.14.204.104"
+#1298823157.766776 "SADD" "r:www.l.google.com:1" "72.14.204.147"
+#1298823157.766901 "SADD" "v:72.14.204.147" "www.l.google.com"
+#1298823157.767086 "EXISTS" "s:www.l.google.com:72.14.204.147"
+#1298823157.767207 "SET" "l:www.l.google.com:72.14.204.147" "1298819557"
+#1298823157.767333 "INCR" "o:www.l.google.com:72.14.204.147"
+
+= format for redis db 6 =
+
+This db index hold a ranking value per hostname.
+
+KEY, VALUE
+
+hostname, float double precision
+
+This can be seen as a cache when an expiration can be set
+by key to limit the lifetime of a ranking. You can create
+a persistent ranking for setting up some "golden" domains.
+
+== sample db 6 ==
+
+1) "truecsi.org"
+redis> GET "truecsi.org"
+"1.00037650602"
+redis>
+
+= contact =
+
+Update, extension, or new data-structure more than welcome.
+
+https://www.github.com/adulau/
+
