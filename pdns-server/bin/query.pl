@@ -32,19 +32,6 @@ my %RRTypevalue = (
 
 my $r = Redis->new( server => '127.0.0.1:6379', encoding => undef );
 
-#sample feeder input
-#1298823157.764221 "SET" "l:www.l.google.com:72.14.204.103" "1298819557"
-#1298823157.764353 "INCR" "o:www.l.google.com:72.14.204.103"
-#1298823157.765310 "SADD" "r:www.l.google.com:1" "72.14.204.104"
-#1298823157.765439 "SADD" "v:72.14.204.104" "www.l.google.com"
-#1298823157.765567 "EXISTS" "s:www.l.google.com:72.14.204.104"
-#1298823157.765696 "SET" "l:www.l.google.com:72.14.204.104" "1298819557"
-#1298823157.765823 "INCR" "o:www.l.google.com:72.14.204.104"
-#1298823157.766776 "SADD" "r:www.l.google.com:1" "72.14.204.147"
-#1298823157.766901 "SADD" "v:72.14.204.147" "www.l.google.com"
-#1298823157.767086 "EXISTS" "s:www.l.google.com:72.14.204.147"
-#1298823157.767207 "SET" "l:www.l.google.com:72.14.204.147" "1298819557"
-#1298823157.767333 "INCR" "o:www.l.google.com:72.14.204.147"
 
 while ( my ( $typename, $typevalue ) = each(%RRTypevalue) ) {
 
