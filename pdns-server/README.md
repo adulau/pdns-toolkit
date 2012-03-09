@@ -7,3 +7,21 @@ can be used for research, security analysis or data mining.
 The data store of the Passive DNS is relying on Redis.
 The data store format is described in ./doc/datastore-format.txt 
 
+Installation
+------------
+
+This is the minimal set to run a standalone passive-dns.
+
+* Install [redis](http://www.redis.io/).
+* Start ./src/redis-server
+* Download [dnscap](https://www.dns-oarc.net/tools/dnscap)
+* Apply the patch against dnscap to output date in epoch format
+* copy the dnscap binary in ./pdns-server/bin
+* Start the feeder cd pdns-server/bin; pdns-dnscap2feeder.sh;
+* Now the feeder is capturing the DNS answers
+
+* You can start the sample web interface cd pdns-server/web; pdns-web.sh
+* or try a query on a hosname cd pdns-server/bin; perl query.pl www.google.com
+
+The install process will be automated in the next release.
+
