@@ -10,7 +10,8 @@ The data store format is described in ./doc/datastore-format.txt
 Installation
 ------------
 
-This is the minimal set to run a standalone passive-dns.
+This is the minimal set to run a standalone passive-dns using dnscap
+as a source for the DNS packets.
 
 * Install [redis](http://www.redis.io/).
 * Start ./src/redis-server
@@ -25,3 +26,13 @@ This is the minimal set to run a standalone passive-dns.
 
 The install process will be automated in the next release.
 
+dnscap
+------
+
+Patch dnscap.c (from branches/wessels) to output the date in epoch format.
+
+-               strftime(when, sizeof when, "%Y-%m-%d %T", tm);
++               strftime(when, sizeof when, "%s", tm);
+
+When having multiple flows of DNS queries, it's better to convert the date
+as soon as possible.
